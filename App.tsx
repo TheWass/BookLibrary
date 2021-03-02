@@ -1,6 +1,7 @@
-import { StatusBar } from 'expo-status-bar';
+import 'react-native-gesture-handler';
 import React from 'react';
 import { StyleSheet, SafeAreaView } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import BookList from './components/booklist';
 import { Book } from './models/book';
 
