@@ -1,34 +1,58 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import AppLoading from 'expo-app-loading';
+import * as Font from 'expo-font';
+import { Ionicons } from '@expo/vector-icons';
+import { Root } from 'native-base';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
-import BookList from './components/booklist';
-import { Book } from './models/book';
 
-const books: Array<Book> = [
-    { id:1, author:"Author1", title:"Title1" },
-    { id:2, author:"Author2", title:"Title2" },
-    { id:3, author:"Author3", title:"Title3" },
-    { id:4, author:"Author4", title:"Title4" },
-    { id:5, author:"Author5", title:"Title5" }
-]
+import BooksPage from './pages/books';
+import AddButton from './components/addButton';
 
-const App = () => {
-    return (
-        <SafeAreaView style={styles.container}>
-            <StatusBar style="auto" />
-            <BookList books={books} />
-        </SafeAreaView>
-    );
+const Stack = createStackNavigator();
+
+interface ReactState {
+    isReady: boolean;
 }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
-
-export default App;
+export default class App extends React.Component<{}, ReactState>  {
+    constructor(props: {}) {
+        super(props);
+        this.state = {
+            isReady: false,
+        };
+    }
+  
+    async componentDidMount() {
+        await Font.loadAsync({
+            Roboto: require('native-base/Fonts/Roboto.ttf'),
+            Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
+            ...Ionicons.font,
+        });
+        this.setState({ isReady: true });
+    }
+  
+    render() {
+        if (!this.state.isReady) {
+            return <AppLoading />;
+        }
+    
+        return (<Root>
+            <StatusBar style="auto" />
+            <NavigationContainer>
+                <Stack.Navigator>
+                    <Stack.Screen 
+                        name="Books"
+                        component={BooksPage}
+                        options={{
+                            headerRight: AddButton
+                        }}
+                    />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </Root>);
+    }
+}
+  

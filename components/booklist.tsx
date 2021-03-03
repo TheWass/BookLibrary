@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { List, ListItem } from 'native-base';
 import { Book } from '../models/book';
 import BookItem from './bookitem';
 
@@ -9,24 +9,16 @@ interface BookListParams {
 
 
 const BookList = ({books}: BookListParams) => {
-    const renderItem = ({item}: {item: Book}) => (
-        <BookItem author={item.author} title={item.title} />
-    );
+    const listItems = books.map((item) => (
+        <ListItem key={item.id}>
+            <BookItem author={item.author} title={item.title} />
+        </ListItem>
+    ));
     return (
-        <FlatList 
-            data={books}
-            renderItem={ renderItem }
-        />
+        <List>
+            {listItems}
+        </List>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-});
 
 export default BookList;
