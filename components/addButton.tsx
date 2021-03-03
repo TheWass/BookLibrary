@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Button, Icon } from 'native-base';
 
 const AddButton = () => {
@@ -9,4 +10,7 @@ const AddButton = () => {
     );
 }
 
-export default AddButton;
+export default connect(
+    null,
+    null
+)(AddButton);

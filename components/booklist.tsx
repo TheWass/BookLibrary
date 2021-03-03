@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { List, ListItem } from 'native-base';
 import { Book } from '../models/book';
 import BookItem from './bookitem';
@@ -21,4 +22,7 @@ const BookList = ({books}: BookListParams) => {
     );
 }
 
-export default BookList;
+export default connect(
+    null,
+    null
+)(BookList);

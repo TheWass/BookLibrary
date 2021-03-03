@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Container, Content } from 'native-base';
 import BookList from '../components/booklist';
 import { Book } from '../models/book';
@@ -22,4 +23,7 @@ const BooksPage = () => {
     );
 }
 
-export default BooksPage;
+export default connect(
+    null,
+    null
+)(BooksPage);
