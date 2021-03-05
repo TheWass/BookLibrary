@@ -3,14 +3,15 @@ import { connect } from 'react-redux';
 import { List, ListItem } from 'native-base';
 import { Book } from '../models/book';
 import BookItem from './bookitem';
+import { RootState } from '../redux/store';
+import { getBooks } from '../redux/books/selectors';
 
 interface BookListParams {
     books: Array<Book>;
 }
 
-
 const BookList = ({books}: BookListParams) => {
-    const listItems = books.map((item) => (
+    const listItems = books.map((item: Book) => (
         <ListItem key={item.id}>
             <BookItem author={item.author} title={item.title} />
         </ListItem>
@@ -21,8 +22,11 @@ const BookList = ({books}: BookListParams) => {
         </List>
     );
 }
+const mapStateToProps = (state: RootState): { books: Array<Book> } => {
+    const books = getBooks(state);
+    return { books };
+};
 
 export default connect(
-    null,
-    null
+    mapStateToProps
 )(BookList);

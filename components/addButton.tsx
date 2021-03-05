@@ -10,7 +10,4 @@ const AddButton = () => {
     );
 }
 
-export default connect(
-    null,
-    null
-)(AddButton);
+export default connect()(AddButton);
