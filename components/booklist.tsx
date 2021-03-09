@@ -1,18 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { List, ListItem } from 'native-base';
-import { Book } from '../models/book';
+import { Book } from '@/models/db';
 import BookItem from './bookitem';
-import { RootState } from '../redux/store';
-import { getBooks } from '../redux/books/selectors';
+import { RootState } from '@/redux/store';
+import { getBooks } from '@/redux/books/selectors';
 
 interface BookListParams {
     books: Array<Book>;
 }
 
 const BookList = ({books}: BookListParams) => {
-    const listItems = books.map((item: Book) => (
-        <ListItem key={item.id}>
+    const listItems = books.map((item: Book, index) => (
+        <ListItem key={index}>
             <BookItem author={item.author} title={item.title} />
         </ListItem>
     ));

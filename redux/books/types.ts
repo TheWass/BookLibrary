@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { Book } from '../../models/book';
+import { Book } from '@/models/db';
 
 export const ADD_BOOK = 'ADD_BOOK';
 export const REMOVE_BOOK = 'REMOVE_BOOK';
@@ -17,7 +17,7 @@ interface AddBookAction extends Action {
 interface RemoveBookAction extends Action {
     type: typeof REMOVE_BOOK;
     payload: {
-        bookId: number;
+        isbn: string;
     };
 }
 

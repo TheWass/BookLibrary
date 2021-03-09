@@ -9,10 +9,10 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StatusBar } from 'expo-status-bar';
 
-import { ReduxStore } from './redux/store';
-import BooksPage from './pages/books';
-import AddButton from './components/addButton';
-import BarcodeScanner from './pages/barcodeScanner';
+import { ReduxStore } from '@/redux/store';
+import BooksPage from '@/pages/books';
+import AddButton from '@/components/addButton';
+import BarcodeScanner from '@/pages/barcodeScanner';
 
 const MainStack = createStackNavigator();
 const RootStack = createStackNavigator();

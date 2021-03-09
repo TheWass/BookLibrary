@@ -18,7 +18,7 @@ export function booksReducer(
         case REMOVE_BOOK: {
             return {
                 ...state,
-                books: state.books.filter((book) => book.id !== action.payload.bookId)
+                books: state.books.filter((book) => book.isbn !== action.payload.isbn)
             };
         }
         default:
