@@ -1,4 +1,4 @@
-import { Book } from '@/models/db';
+import { Book } from '@/providers/database/model';
 import { RootState } from '../store';
 
 export const getBooks = (store: RootState): Array<Book> => store.books.books;

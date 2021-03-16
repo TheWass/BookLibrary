@@ -1,5 +1,5 @@
-import { Book } from "@/models/db"
-import * as sqlite from '@/providers/sqlite';
+import { Book } from "@/providers/database/model"
+import * as sqlite from '@/providers/database/sqlite';
 import { BookEntry } from "./model";
 
 const getData = async <T>(endpoint: string, id?: string): Promise<T> => {

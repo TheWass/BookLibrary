@@ -1,4 +1,4 @@
-import { Book } from '@/models/db';
+import { Book } from '@/providers/database/model';
 import { BooksAction, ADD_BOOK, REMOVE_BOOK } from './types';
 
 export const addBook = (book: Book): BooksAction  => ({

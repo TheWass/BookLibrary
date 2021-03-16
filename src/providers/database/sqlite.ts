@@ -5,6 +5,7 @@ import * as Share from 'expo-sharing';
 export const DATABASE_NAME = 'AppSQLite.db3';
 
 export const initializeDatabase = async (): Promise<void> => {
+    await wipeDb();
     const conn = SQLite.openDatabase(DATABASE_NAME);
     conn.transaction((trans) => {
         trans.executeSql('CREATE TABLE IF NOT EXISTS ApiCall (service TEXT, req TEXT, res TEXT);');
@@ -26,8 +27,12 @@ export const getDbPath = async (): Promise<string> => {
 };
 
 export const wipeDb = async (): Promise<void> => {
-    const file = await getDbPath();
-    FileSystem.deleteAsync(file);
+    try {
+        const file = await getDbPath();
+        await FileSystem.deleteAsync(file);
+    } catch {
+        // Do nothing.
+    }
 };
 
 export const exportDb = async (): Promise<void> => {

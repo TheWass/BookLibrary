@@ -2,7 +2,8 @@ import React from 'react';
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons'
-import Main from './src/Main';
+import { initializeDatabase } from '@/providers/database/sqlite';
+import Main from '@/Main';
 
 const App = (): JSX.Element => {
     const [isLoading, setIsLoading] = React.useState(true);
@@ -14,6 +15,7 @@ const App = (): JSX.Element => {
                 Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
                 ...Ionicons.font,
             });
+            await initializeDatabase();
             setIsLoading(false);
         }, 1000)
   

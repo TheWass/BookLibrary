@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { Book } from '@/models/db';
+import { Book } from '@/providers/database/model';
 
 export const ADD_BOOK = 'ADD_BOOK';
 export const REMOVE_BOOK = 'REMOVE_BOOK';
