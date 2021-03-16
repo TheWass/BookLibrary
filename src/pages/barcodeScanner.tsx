@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import * as OpenLibraryApi from '@/providers/OpenLibrary/api';
 
 export default function Scanner(): JSX.Element {
     const navigation = useNavigation();
@@ -15,10 +16,11 @@ export default function Scanner(): JSX.Element {
         })();
     }, []);
 
-    const handleBarCodeScanned = ({ type, data }: { type: string, data: string }) => {
+    const handleBarCodeScanned = async ({ type, data }: { type: string, data: string }) => {
         setScanned(true);
+        const book = await OpenLibraryApi.getBookData(data);
+        alert(`${book.title} by ${book.author}`);
         navigation.goBack();
-        alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     };
 
     if (hasPermission === null) {
