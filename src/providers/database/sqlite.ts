@@ -1,22 +1,20 @@
 import * as SQLite from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system';
 import * as Share from 'expo-sharing';
+import * as model from './model';
 
 export const DATABASE_NAME = 'AppSQLite.db3';
 
 export const initializeDatabase = async (): Promise<void> => {
     await wipeDb();
-    const conn = SQLite.openDatabase(DATABASE_NAME);
-    conn.transaction((trans) => {
-        trans.executeSql('CREATE TABLE IF NOT EXISTS ApiCall (service TEXT, req TEXT, res TEXT);');
-        trans.executeSql('CREATE TABLE IF NOT EXISTS Book (isbn TEXT, author TEXT, title TEXT, readCt INT);');
-    })
+    // TODO:  Calling this causes a require cycle.  Reafactor to remove.
+    return model.createTables();
 };
 
 export const takeWalCheckpoint = async (): Promise<void> => {
-    const conn = SQLite.openDatabase(DATABASE_NAME);
+    const db = SQLite.openDatabase(DATABASE_NAME);
     return new Promise((resolve) => {
-        conn.exec([{ sql: 'PRAGMA wal_checkpoint(TRUNCATE);', args: [] }], false, () => resolve());
+        db.exec([{ sql: 'PRAGMA wal_checkpoint(TRUNCATE);', args: [] }], false, () => resolve());
     });
 };
 
@@ -41,13 +39,17 @@ export const exportDb = async (): Promise<void> => {
     Share.shareAsync(file);
 };
 
-export const executeSql = async (sql: string, data: Array<string|number|boolean>): Promise<SQLite.SQLTransaction> => {
-    const conn = SQLite.openDatabase(DATABASE_NAME);
+export const executeSql = async (sql: string, data?: Array<string|number|boolean>): Promise<SQLite.SQLResultSet> => {
+    const db = SQLite.openDatabase(DATABASE_NAME);
     return new Promise((resolve, reject) => {
-        conn.transaction((trans) => {
-            trans.executeSql(sql, data, (res) => resolve(res));
-            //trans.executeSql('INSERT INTO ApiCall VALUES (service = ?, req = ?, res = ?', [ system, request, response ]);
+        db.transaction((tx) => {
+            executeSqlTx(tx, sql, data).then((res) => resolve(res)).catch((err: SQLite.SQLError) => reject(err));
         }, (error) => reject(error));
     });
-
 };
+
+export const executeSqlTx = async (tx: SQLite.SQLTransaction, sql: string, data?: Array<string|number|boolean>): Promise<SQLite.SQLResultSet> => {
+    return new Promise((resolve, reject) => {
+        tx.executeSql(sql, data, (_tx, res) => resolve(res), (_tx, err) => { reject(err); return false; });
+    });
+}

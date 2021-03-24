@@ -3,6 +3,9 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as OpenLibraryApi from '@/providers/OpenLibrary/api';
+import { saveBook } from '@/providers/database/models/Book';
+import { ReduxStore } from '@/redux/store';
+import { addBook } from '@/redux/books/actions';
 
 export default function Scanner(): JSX.Element {
     const navigation = useNavigation();
@@ -20,6 +23,8 @@ export default function Scanner(): JSX.Element {
         setScanned(true);
         const book = await OpenLibraryApi.getBookData(data);
         alert(`${book.title} by ${book.author}`);
+        await saveBook(book);
+        ReduxStore.getStore().dispatch(addBook(book));
         navigation.goBack();
     };
 

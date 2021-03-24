@@ -11,6 +11,7 @@ import { StatusBar } from 'expo-status-bar';
 import { ReduxStore } from '@/redux/store';
 import BooksPage from '@/pages/books';
 import AddButton from '@/components/addButton';
+import SettingsButton from '@/components/settingsButton';
 import BarcodeScanner from '@/pages/barcodeScanner';
 
 enableScreens()
@@ -23,7 +24,14 @@ function MainStackScreen() {
             name="Books"
             component={BooksPage}
             options={{
+                headerLeft: function headerLeft() { return <SettingsButton />; },
                 headerRight: function headerRight() { return <AddButton />; }
+            }}
+        />
+        <RootStack.Screen 
+            name="Settings"
+            component={BooksPage}
+            options={{
             }}
         />
     </MainStack.Navigator>);
