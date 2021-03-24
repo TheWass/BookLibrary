@@ -16,3 +16,8 @@ export const saveApiCall = (call: ApiCall): Promise<SQLResultSet> => {
     const sql = 'INSERT INTO ApiCall (service, req, res) VALUES (?, ?, ?)';
     return sqlite.executeSql(sql, [call.service, call.request, call.response]);
 }
+
+export const purgeApiCalls = (): Promise<SQLResultSet> => {
+    const sql = 'DELETE FROM ApiCall;';
+    return sqlite.executeSql(sql);
+}

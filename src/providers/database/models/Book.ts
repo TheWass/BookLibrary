@@ -18,3 +18,8 @@ export const saveBook = (book: Book): Promise<SQLResultSet> => {
     const sql = 'INSERT INTO Book (isbn, author, title, readCt) VALUES (?, ?, ?, ?)';
     return sqlite.executeSql(sql, [book.isbn, book.author, book.title, (book.readIt ? 1 : 0)]);
 }
+
+export const getBooks = (): Promise<Array<Book>> => {
+    const sql = 'SELECT author, title FROM Book;';
+    return sqlite.executeSql(sql).then((res) => res.rows._array);
+}

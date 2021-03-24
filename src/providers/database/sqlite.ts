@@ -1,15 +1,8 @@
 import * as SQLite from 'expo-sqlite';
 import * as FileSystem from 'expo-file-system';
 import * as Share from 'expo-sharing';
-import * as model from './model';
 
 export const DATABASE_NAME = 'AppSQLite.db3';
-
-export const initializeDatabase = async (): Promise<void> => {
-    await wipeDb();
-    // TODO:  Calling this causes a require cycle.  Reafactor to remove.
-    return model.createTables();
-};
 
 export const takeWalCheckpoint = async (): Promise<void> => {
     const db = SQLite.openDatabase(DATABASE_NAME);
@@ -20,7 +13,7 @@ export const takeWalCheckpoint = async (): Promise<void> => {
 
 export const getDbPath = async (): Promise<string> => {
     // expo-sqlite always puts it under the SQLite folder. 
-    const file = await FileSystem.getInfoAsync('SQLite/' + DATABASE_NAME);
+    const file = await FileSystem.getInfoAsync(FileSystem.documentDirectory + 'SQLite/' + DATABASE_NAME);
     return file.uri;
 };
 

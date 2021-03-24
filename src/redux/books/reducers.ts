@@ -1,4 +1,4 @@
-import { BooksState, BooksAction, ADD_BOOK, REMOVE_BOOK } from './types';
+import { BooksState, BooksAction, ADD_BOOK, REMOVE_BOOK, SET_BOOKS } from './types';
 
 const initialState: BooksState = {
     books: []
@@ -19,6 +19,12 @@ export function booksReducer(
             return {
                 ...state,
                 books: state.books.filter((book) => book.isbn !== action.payload.isbn)
+            };
+        }
+        case SET_BOOKS: {
+            return {
+                ...state,
+                books: action.payload.books.map((book) => ({...book}))
             };
         }
         default:

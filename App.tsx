@@ -2,8 +2,12 @@ import React from 'react';
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons'
-import { initializeDatabase } from '@/providers/database/sqlite';
+import { purgeApiCalls } from '@/providers/database/models/ApiCall';
+import { createTables } from '@/providers/database/model';
 import Main from '@/Main';
+import { setBooks } from '@/redux/books/actions';
+import { ReduxStore } from '@/redux/store';
+import { getBooks } from '@/providers/database/models/Book';
 
 const App = (): JSX.Element => {
     const [isLoading, setIsLoading] = React.useState(true);
@@ -15,7 +19,12 @@ const App = (): JSX.Element => {
                 Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
                 ...Ionicons.font,
             });
-            await initializeDatabase();
+            // TODO: Parse this out into a service...
+            await createTables();
+            await purgeApiCalls();
+            const books = await getBooks();
+            ReduxStore.getStore().dispatch(setBooks(books));
+
             setIsLoading(false);
         }, 1000)
   

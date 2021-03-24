@@ -10,6 +10,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import { ReduxStore } from '@/redux/store';
 import BooksPage from '@/pages/books';
+import SettingsPage from '@/pages/settings';
 import AddButton from '@/components/addButton';
 import SettingsButton from '@/components/settingsButton';
 import BarcodeScanner from '@/pages/barcodeScanner';
@@ -30,7 +31,7 @@ function MainStackScreen() {
         />
         <RootStack.Screen 
             name="Settings"
-            component={BooksPage}
+            component={SettingsPage}
             options={{
             }}
         />
