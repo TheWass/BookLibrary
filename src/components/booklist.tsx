@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { List, ListItem } from 'native-base';
-import { Book } from '@/providers/database/model';
+import { Book } from '@/providers/database/models/Book';
 import BookItem from './bookitem';
 import { RootState } from '@/redux/store';
 import { getBooks } from '@/redux/books/selectors';

@@ -10,9 +10,8 @@ import { StatusBar } from 'expo-status-bar';
 
 import { ReduxStore } from '@/redux/store';
 import BooksPage from '@/pages/books';
+import EntryFormPage from '@/pages/entryForm';
 import SettingsPage from '@/pages/settings';
-import AddButton from '@/components/addButton';
-import SettingsButton from '@/components/settingsButton';
 import BarcodeScanner from '@/pages/barcodeScanner';
 
 enableScreens()
@@ -21,19 +20,20 @@ const RootStack = createNativeStackNavigator();
 
 function MainStackScreen() {
     return (<MainStack.Navigator>
-        <RootStack.Screen 
+        <MainStack.Screen 
             name="Books"
             component={BooksPage}
-            options={{
-                headerLeft: function headerLeft() { return <SettingsButton />; },
-                headerRight: function headerRight() { return <AddButton />; }
-            }}
+            options={{ headerShown: false }}
         />
-        <RootStack.Screen 
+        <MainStack.Screen 
             name="Settings"
             component={SettingsPage}
-            options={{
-            }}
+            options={{ headerShown: false }}
+        />
+        <MainStack.Screen 
+            name="Entry"
+            component={EntryFormPage}
+            options={{ headerShown: false }}
         />
     </MainStack.Navigator>);
   }
@@ -50,7 +50,7 @@ export default function Main(): JSX.Element {
                         component={MainStackScreen}
                         options={{ headerShown: false }}
                     />
-                    <RootStack.Screen name="Scan ISBN" component={BarcodeScanner} />
+                    <RootStack.Screen name="Scan" component={BarcodeScanner} />
                 </RootStack.Navigator>
             </NavigationContainer>
         </Provider>

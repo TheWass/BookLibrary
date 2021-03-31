@@ -16,10 +16,10 @@ const onPress = (navigation: any) => {
                 case 0: //Cancel
                     break;
                 case 1: //Scan
-                    navigation.navigate('Scan ISBN')
+                    navigation.navigate('Scan')
                     break;
                 case 2: //Enter
-
+                    navigation.navigate('Entry')
                     break;
             }
         }
