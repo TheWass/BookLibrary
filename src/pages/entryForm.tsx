@@ -1,19 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from '@react-navigation/native';
-import { Container, Content, Form, Item, Input, Radio, Text, Header, Body, Button, Icon, Left, Right, Title, ListItem } from 'native-base';
+import { Container, Content, Form, Item, Input, Radio, Text, Label, Header, Body, Button, Icon, Left, Right, Title, ListItem } from 'native-base';
 import { addBook } from "@/redux/books/actions";
 import { ReduxStore } from "@/redux/store";
 import { Book } from "@/providers/database/models/Book";
 import { saveBook } from '@/providers/database/models/Book';
 
 type RouteProps = {
-    Entry: {
-        author: string;
-        title: string;
-        isbn: string;
-    };
+    Entry: Book;
 }
 
 type Props = {
@@ -23,10 +19,11 @@ type Props = {
 
 const EntryForm = ({ navigation, route }: Props) => {
     const nav = navigation;
-    const [author, onChangeAuthor] = React.useState(route.params.author || '');
-    const [title, onChangeTitle] = React.useState(route.params.title || '');
-    const [readIt, setIsEnabled] = useState(true);
-    const isbn = route.params.isbn || '';
+    const [author, onChangeAuthor] = React.useState(route.params?.author || '');
+    const [title, onChangeTitle] = React.useState(route.params?.title || '');
+    const [readIt, setIsEnabled] = React.useState(true);
+    const [pgCount, onChangePgCount] = React.useState(route.params?.pgCount.toString());
+    const isbn = route.params?.isbn || '';
 
     const save = async () => {
         
@@ -35,7 +32,8 @@ const EntryForm = ({ navigation, route }: Props) => {
             isbn: isbn,
             author,
             title,
-            readIt
+            readIt,
+            pgCount: +pgCount
         }
         await saveBook(book);
         ReduxStore.getStore().dispatch(addBook(book));
@@ -59,8 +57,14 @@ const EntryForm = ({ navigation, route }: Props) => {
             </Header>
             <Content>
                 <Form>
-                    <Item><Input placeholder='Title' value={title} onChangeText={onChangeTitle} /></Item>
-                    <Item><Input placeholder='Author' value={author} onChangeText={onChangeAuthor}  /></Item>
+                    <Item fixedLabel>
+                        <Label>Title</Label>
+                        <Input value={title} onChangeText={onChangeTitle} />
+                    </Item>
+                    <Item fixedLabel>
+                        <Label>Author</Label>
+                        <Input value={author} onChangeText={onChangeAuthor} />
+                    </Item>
                     <ListItem onPress={() => setIsEnabled(previousState => !previousState)}>
                         <Left>
                             <Text>Read it?</Text>
@@ -69,6 +73,10 @@ const EntryForm = ({ navigation, route }: Props) => {
                             <Radio selected={readIt} />
                         </Right>
                     </ListItem>
+                    <Item fixedLabel>
+                        <Label>Page Count</Label>
+                        <Input  value={pgCount} onChangeText={onChangePgCount} keyboardType="numeric" />
+                    </Item>
                 </Form>
             </Content>
         </Container>

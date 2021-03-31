@@ -30,6 +30,7 @@ export const getBookData = async(isbn: string): Promise<Book> => {
     return {
         isbn: isbn,
         author: author.name,
-        title: book.title
+        title: book.title,
+        pgCount: book.number_of_pages
     };
 }

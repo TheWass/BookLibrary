@@ -8,7 +8,7 @@ interface BookItemParams {
 
 const BookItem = ({ author, title }: BookItemParams): JSX.Element => {
     return (
-        <Text>{title} : {author}</Text>
+        <><Text style={{fontWeight: "bold"}}>{title}</Text><Text> {author}</Text></>
     );
 }
 
