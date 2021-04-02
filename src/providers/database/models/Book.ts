@@ -16,7 +16,7 @@ export const createTable = (): Promise<SQLResultSet> => {
 
 export const saveBook = (book: Book): Promise<SQLResultSet> => {
     //TODO:  Check if the ISBN is already in...
-    const sql = 'INSERT INTO Book (isbn, author, title, readCt, pgCount) VALUES (?, ?, ?, ?)';
+    const sql = 'INSERT INTO Book (isbn, author, title, readCt, pgCount) VALUES (?, ?, ?, ?, ?)';
     return sqlite.executeSql(sql, [book.isbn, book.author, book.title, (book.readIt ? 1 : 0), book.pgCount]);
 }
 

@@ -1,4 +1,4 @@
-export interface BookEntry {
+export interface OLBook {
     publishers: Array<string>;  // ["Puffin"]
     number_of_pages: number;    // 96
     isbn_10: Array<string>;     // ["0140328726"]
@@ -39,4 +39,9 @@ export interface BookEntry {
         value: string;          // "And these two very old people are the father and mother of Mrs. Bucket."
     },
     revision: number;           // 12
+}
+
+// TODO: Fill out this interface.
+export interface OLAuthor {
+    name: string;
 }

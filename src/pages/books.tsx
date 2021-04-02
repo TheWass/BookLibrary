@@ -3,7 +3,6 @@ import { useNavigation } from '@react-navigation/native'
 import { connect } from "react-redux";
 import { Body, Button, Container, Content, Header, Icon, Left, Right, Title } from 'native-base';
 import BookList from '@/components/booklist';
-import AddButton from "@/components/addButton";
 
 const BooksPage = () => {
     const navigation = useNavigation();
@@ -11,12 +10,16 @@ const BooksPage = () => {
         <Container>
             <Header>
                 <Left>
-                <Button transparent onPress={() => navigation.navigate('Settings')}>
-                    <Icon name='settings' />
-                </Button>
+                    <Button transparent onPress={() => navigation.navigate('Settings')}>
+                        <Icon name='settings' />
+                    </Button>
                 </Left>
                 <Body><Title>Book Library</Title></Body>
-                <Right><AddButton /></Right>
+                <Right>
+                    <Button transparent onPress={() => navigation.navigate('Entry')}>
+                        <Icon name='add' />
+                    </Button>
+                </Right>
             </Header>
             <Content>
                 <BookList />

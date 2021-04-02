@@ -1,6 +1,6 @@
 import { Book } from "@/providers/database/models/Book";
 import { saveApiCall } from "@/providers/database/models/ApiCall";
-import { BookEntry } from "./model";
+import { OLBook, OLAuthor } from "./model";
 
 const getData = async <T>(endpoint: string, id?: string): Promise<T> => {
     let url = 'https://openlibrary.org/' + endpoint;
@@ -23,9 +23,9 @@ const getData = async <T>(endpoint: string, id?: string): Promise<T> => {
 };
 
 export const getBookData = async(isbn: string): Promise<Book> => {
-    const book = await getData<BookEntry>('isbn', isbn);
+    const book = await getData<OLBook>('isbn', isbn);
     const authorUri: string = book.authors[0].key
-    const author = await getData<any>(authorUri);
+    const author = await getData<OLAuthor>(authorUri);
 
     return {
         isbn: isbn,

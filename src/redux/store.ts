@@ -1,13 +1,17 @@
 import { createStore, combineReducers, Store } from 'redux';
 import { booksReducer } from './books/reducers';
+import { entryReducer } from './entry/reducers';
 import { BooksState } from './books/types';
+import { EntryState } from './entry/types';
 
 const reducers = combineReducers({
-    books: booksReducer
+    books: booksReducer,
+    entry: entryReducer
 });
 
 export interface RootState {
     books: BooksState;
+    entry: EntryState;
 }
 
 export class ReduxStore {
