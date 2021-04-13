@@ -13,13 +13,20 @@ const getData = async <T>(endpoint: string, id?: string): Promise<T> => {
             'Content-Type': 'application/json'
         },
     });
-    const json: T = await res.json();
-    await saveApiCall({
-        service: 'OpenLibrary',
-        request: url,
-        response: JSON.stringify(json)
-    })
-    return json;
+    if (res.ok) {
+        const json: T = await res.json();
+        await saveApiCall({
+            service: 'OpenLibrary',
+            request: url,
+            response: JSON.stringify(json)
+        })
+        return json;
+    } else if (res.status == 404) {
+        throw url + ' does not exist.';
+    } else {
+        const error = await res.text();
+        throw error;
+    }
 };
 
 export const getBookData = async(isbn: string): Promise<Book> => {
@@ -31,6 +38,6 @@ export const getBookData = async(isbn: string): Promise<Book> => {
         isbn: isbn,
         author: author.name,
         title: book.title,
-        pgCount: book.number_of_pages
+        pageCt: book.number_of_pages
     };
 }

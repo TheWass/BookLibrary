@@ -12,7 +12,6 @@ import { ReduxStore } from '@/redux/store';
 import BooksPage from '@/pages/books';
 import EntryFormPage from '@/pages/entryForm';
 import SettingsPage from '@/pages/settings';
-import BarcodeScanner from '@/pages/barcodeScanner';
 
 enableScreens()
 const MainStack = createStackNavigator();
@@ -50,7 +49,6 @@ export default function Main(): JSX.Element {
                         component={MainStackScreen}
                         options={{ headerShown: false }}
                     />
-                    <RootStack.Screen name="Scan" component={BarcodeScanner} />
                 </RootStack.Navigator>
             </NavigationContainer>
         </Provider>

@@ -10,6 +10,7 @@ import { ReduxStore } from "@/redux/store";
 import { Book } from "@/providers/database/models/Book";
 import { saveBook } from '@/providers/database/models/Book';
 import * as OpenLibraryApi from '@/providers/OpenLibrary/api';
+import { isValidIsbn } from "@/helpers";
 
 type RouteProps = {
     Entry: Book;
@@ -21,12 +22,15 @@ type Props = {
 }
 
 const EntryForm = ({ navigation, route }: Props) => {
-    const [author, onChangeAuthor] = React.useState(route.params?.author || '');
-    const [title, onChangeTitle] = React.useState(route.params?.title || '');
+    const [author, setAuthor] = React.useState(route.params?.author || '');
+    const [title, setTitle] = React.useState(route.params?.title || '');
+    const [pageCt, setPageCt] = React.useState(route.params?.pageCt.toString());
+    const [isbn, setIsbn] = React.useState(route.params?.isbn || '');
+    const [isbnError, setIsbnError] = React.useState(false);
     const [readIt, setIsEnabled] = React.useState(true);
-    const [pgCount, onChangePgCount] = React.useState(route.params?.pgCount.toString());
     const [hasPermission, setHasPermission] = React.useState(false);
     const [scanned, setScanned] = React.useState(false);
+    const [errorMsg, setErrorMsg] = React.useState('');
 
     React.useEffect(() => {
         (async () => {
@@ -37,9 +41,18 @@ const EntryForm = ({ navigation, route }: Props) => {
 
     const handleBarCodeScanned = async ({ data }: { type: string, data: string }) => {
         setScanned(true);
-        const book = await OpenLibraryApi.getBookData(data);
-        navigation.goBack();
-        navigation.navigate('Entry', {...book});
+        setErrorMsg('');
+        try {
+            const book = await OpenLibraryApi.getBookData(data);
+            setIsbn(book.isbn);
+            setAuthor(book.author);
+            setTitle(book.title);
+            setPageCt(book.pageCt.toString());
+        } catch (ex) {
+            setErrorMsg(ex);
+            console.error(ex);
+            throw ex;
+        }
     };
 
     if (hasPermission === null) {
@@ -49,22 +62,51 @@ const EntryForm = ({ navigation, route }: Props) => {
         return <Text>No access to camera</Text>;
     }
 
-    const isbn = route.params?.isbn || '';
-
-
     const save = async () => {
         // TODO:  Put this code into a service.
         const book: Book = {
-            isbn: isbn,
+            isbn,
             author,
             title,
             readIt,
-            pgCount: +pgCount
+            pageCt: +pageCt
         }
-        await saveBook(book);
-        ReduxStore.getStore().dispatch(addBook(book));
+        if (title && author) {
+            await saveBook(book);
+            ReduxStore.getStore().dispatch(addBook(book));
+        }
         navigation.goBack();
     };
+
+    const message = () => {
+        if (errorMsg) {
+            return (<Text style={styles.scanError}>{errorMsg}</Text>);
+        }
+        if (!title && !author) {
+            return (<Text style={styles.scanProcess}>Looking up book...</Text>);
+        }
+        return(<></>);
+    }
+
+    const scanner = () => {
+        if (scanned) {
+            return (<View style={styles.barcodeMask}>{message()}</View>)
+        } else {
+            return (<BarCodeScanner
+                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                style={StyleSheet.absoluteFillObject}
+            />);
+        }
+    }
+
+    const validateIsbn = (value: string) => {
+        if (value.length == 0 || isValidIsbn(value)) {
+            setIsbnError(false);
+        } else {
+            setIsbnError(true);
+        }
+        setIsbn(value);
+    }
 
     return (
         <Container>
@@ -82,37 +124,53 @@ const EntryForm = ({ navigation, route }: Props) => {
                 </Right>
             </Header>
             <Content>
-                <View style={{ height: 200, width:'100%' }}>
-                    <BarCodeScanner
-                        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                        style={StyleSheet.absoluteFillObject}
-                    />
-                </View>
+                <View style={{ height: 100, width:'100%' }}>{scanner()}</View>
                 <Form>
                     <Item fixedLabel>
                         <Label>Title</Label>
-                        <Input value={title} onChangeText={onChangeTitle} />
+                        <Input value={title} onChangeText={setTitle} />
                     </Item>
                     <Item fixedLabel>
                         <Label>Author</Label>
-                        <Input value={author} onChangeText={onChangeAuthor} />
+                        <Input value={author} onChangeText={setAuthor} />
+                    </Item>
+                    <Item fixedLabel error={isbnError}>
+                        <Label>ISBN</Label>
+                        <Input value={isbn} onChangeText={validateIsbn} keyboardType="numeric" />
+                        { isbnError ? <Icon name='close-circle' style={{color:'red'}}  /> : null}
                     </Item>
                     <ListItem onPress={() => setIsEnabled(previousState => !previousState)}>
                         <Left>
                             <Text>Read it?</Text>
                         </Left>
-                        <Right>
-                            <Radio selected={readIt} />
-                        </Right>
+                        <Body>
+                            <Radio selected={readIt} onPress={() => setIsEnabled(previousState => !previousState)} />
+                        </Body>
                     </ListItem>
                     <Item fixedLabel>
                         <Label>Page Count</Label>
-                        <Input value={pgCount} onChangeText={onChangePgCount} keyboardType="numeric" />
+                        <Input value={pageCt} onChangeText={setPageCt} keyboardType="numeric" />
                     </Item>
                 </Form>
             </Content>
         </Container>
     );
 }
+
+const styles = StyleSheet.create({
+    barcodeMask: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'darkgray'
+    },
+    scanError: {
+        color: 'darkred'
+    },
+    scanProcess: {
+        color: 'black'
+    }
+});
 
 export default connect()(EntryForm);
