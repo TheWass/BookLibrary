@@ -17,6 +17,7 @@ Improvements
 Features
 ------
 * Edit book entry
+* Manual ISBN lookup
 * Sort
 * Letter headers
 * Publish year

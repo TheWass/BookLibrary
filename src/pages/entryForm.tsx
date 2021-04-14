@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet } from "react-native"
+import { StyleSheet, InputAccessoryView, Button as RNButton } from "react-native"
 import { connect } from "react-redux";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -134,7 +134,12 @@ const EntryForm = ({ navigation, route }: Props) => {
                     </Item>
                     <Item fixedLabel error={isbnError}>
                         <Label>ISBN</Label>
-                        <Input value={isbn} onChangeText={validateIsbn} autoCapitalize='characters' />
+                        <Input value={isbn} onChangeText={validateIsbn} keyboardType='numeric' inputAccessoryViewID='enterX' />
+                        <InputAccessoryView nativeID='enterX'>
+                            <View>
+                                <RNButton title='X' onPress={() => setIsbn(isbn + 'X')} />
+                            </View>
+                        </InputAccessoryView>
                         { isbnError ? <Icon name='close-circle' style={{color:'red'}}  /> : null}
                     </Item>
                     <ListItem onPress={() => setIsEnabled(previousState => !previousState)}>
@@ -147,7 +152,7 @@ const EntryForm = ({ navigation, route }: Props) => {
                     </ListItem>
                     <Item fixedLabel>
                         <Label>Page Count</Label>
-                        <Input value={pageCt} onChangeText={setPageCt} keyboardType="numeric" />
+                        <Input value={pageCt} onChangeText={setPageCt} keyboardType='numeric' />
                     </Item>
                 </Form>
             </Content>
