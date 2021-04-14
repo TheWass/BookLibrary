@@ -39,6 +39,7 @@ export interface OLBook {
         value: string;          // "And these two very old people are the father and mother of Mrs. Bucket."
     },
     revision: number;           // 12
+    by_statement: string;
 }
 
 // TODO: Fill out this interface.

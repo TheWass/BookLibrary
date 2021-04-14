@@ -2,11 +2,11 @@ import { SQLResultSet } from 'expo-sqlite';
 import * as sqlite from '../sqlite';
 
 export interface Book {
-    isbn: string;
-    author: string;
-    title: string;
+    isbn?: string;
+    author?: string;
+    title?: string;
     readIt?: boolean;
-    pageCt: number;
+    pageCt?: number;
 }
 
 export const createTable = (): Promise<SQLResultSet> => {
@@ -17,7 +17,12 @@ export const createTable = (): Promise<SQLResultSet> => {
 export const saveBook = (book: Book): Promise<SQLResultSet> => {
     //TODO:  Check if the ISBN is already in...
     const sql = 'INSERT INTO Book (isbn, author, title, readCt, pageCt) VALUES (?, ?, ?, ?, ?)';
-    return sqlite.executeSql(sql, [book.isbn, book.author, book.title, (book.readIt ? 1 : 0), book.pageCt]);
+    return sqlite.executeSql(sql, [
+        book.isbn ?? '',
+        book.author ?? '',
+        book.title ?? '',
+        (book.readIt ? 1 : 0), 
+        book.pageCt ?? '']);
 }
 
 export const getBooks = (): Promise<Array<Book>> => {

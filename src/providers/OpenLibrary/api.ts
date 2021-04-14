@@ -30,14 +30,16 @@ const getData = async <T>(endpoint: string, id?: string): Promise<T> => {
 };
 
 export const getBookData = async(isbn: string): Promise<Book> => {
-    const book = await getData<OLBook>('isbn', isbn);
-    const authorUri: string = book.authors[0].key
-    const author = await getData<OLAuthor>(authorUri);
-
-    return {
-        isbn: isbn,
-        author: author.name,
-        title: book.title,
-        pageCt: book.number_of_pages
-    };
+    const book: Book = { isbn };
+    const bookRes = await getData<OLBook>('isbn', isbn);
+    book.title = bookRes?.title ?? '';
+    book.pageCt = bookRes?.number_of_pages ?? '';
+    if (bookRes.authors) {
+        const authorUri: string = bookRes.authors[0].key
+        const authorRes = await getData<OLAuthor>(authorUri);
+        book.author = authorRes?.name;
+    } else if (bookRes.by_statement) {
+        book.author = bookRes.by_statement;
+    }
+    return book;
 }
