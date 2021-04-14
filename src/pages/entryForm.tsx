@@ -22,10 +22,10 @@ type Props = {
 }
 
 const EntryForm = ({ navigation, route }: Props) => {
-    const [author, setAuthor] = React.useState(route.params?.author || '');
-    const [title, setTitle] = React.useState(route.params?.title || '');
-    const [pageCt, setPageCt] = React.useState(route.params?.pageCt.toString());
-    const [isbn, setIsbn] = React.useState(route.params?.isbn || '');
+    const [author, setAuthor] = React.useState(route.params?.author ?? '');
+    const [title, setTitle] = React.useState(route.params?.title ?? '');
+    const [pageCt, setPageCt] = React.useState(route.params?.pageCt?.toString() ?? '');
+    const [isbn, setIsbn] = React.useState(route.params?.isbn ?? '');
     const [isbnError, setIsbnError] = React.useState(false);
     const [readIt, setIsEnabled] = React.useState(true);
     const [hasPermission, setHasPermission] = React.useState(false);
@@ -44,9 +44,9 @@ const EntryForm = ({ navigation, route }: Props) => {
         setErrorMsg('');
         try {
             const book = await OpenLibraryApi.getBookData(data);
-            setIsbn(book.isbn);
-            setAuthor(book.author);
-            setTitle(book.title);
+            setIsbn(book.isbn ?? '');
+            setAuthor(book.author ?? '');
+            setTitle(book.title ?? '');
             setPageCt(book.pageCt?.toString() ?? '');
         } catch (ex) {
             setErrorMsg(ex);
