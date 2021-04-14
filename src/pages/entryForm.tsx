@@ -47,11 +47,10 @@ const EntryForm = ({ navigation, route }: Props) => {
             setIsbn(book.isbn);
             setAuthor(book.author);
             setTitle(book.title);
-            setPageCt(book.pageCt.toString());
+            setPageCt(book.pageCt?.toString() ?? '');
         } catch (ex) {
             setErrorMsg(ex);
             console.error(ex);
-            throw ex;
         }
     };
 
@@ -63,7 +62,6 @@ const EntryForm = ({ navigation, route }: Props) => {
     }
 
     const save = async () => {
-        // TODO:  Put this code into a service.
         const book: Book = {
             isbn,
             author,
@@ -128,11 +126,11 @@ const EntryForm = ({ navigation, route }: Props) => {
                 <Form>
                     <Item fixedLabel>
                         <Label>Title</Label>
-                        <Input value={title} onChangeText={setTitle} />
+                        <Input value={title} autoCapitalize='words' onChangeText={setTitle} />
                     </Item>
                     <Item fixedLabel>
                         <Label>Author</Label>
-                        <Input value={author} onChangeText={setAuthor} />
+                        <Input value={author} autoCapitalize='words' onChangeText={setAuthor} />
                     </Item>
                     <Item fixedLabel error={isbnError}>
                         <Label>ISBN</Label>

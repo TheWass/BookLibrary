@@ -3,6 +3,7 @@
     "name": "BookLibrary",
     "slug": "BookLibrary",
     "version": "1.0.0",
+    "privacy": "unlisted",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -17,7 +18,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.thewass1428.BookLibrary"
     },
     "android": {
       "adaptiveIcon": {
