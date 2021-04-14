@@ -13,6 +13,7 @@ Improvements
 * Purge should clear the mem store
 * Detect duplicates
 * Database migration strategy
+* ISBN X button is iOS only - Make available for Android.
 
 Features
 ------
