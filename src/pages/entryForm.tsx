@@ -134,7 +134,7 @@ const EntryForm = ({ navigation, route }: Props) => {
                     </Item>
                     <Item fixedLabel error={isbnError}>
                         <Label>ISBN</Label>
-                        <Input value={isbn} onChangeText={validateIsbn} keyboardType="numeric" />
+                        <Input value={isbn} onChangeText={validateIsbn} autoCapitalize='characters' />
                         { isbnError ? <Icon name='close-circle' style={{color:'red'}}  /> : null}
                     </Item>
                     <ListItem onPress={() => setIsEnabled(previousState => !previousState)}>

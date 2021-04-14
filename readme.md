@@ -20,3 +20,4 @@ Features
 * Sort
 * Letter headers
 * Publish year
+* Library Statistics
