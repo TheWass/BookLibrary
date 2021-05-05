@@ -26,6 +26,11 @@ export const saveBook = (book: Book): Promise<SQLResultSet> => {
 }
 
 export const getBooks = (): Promise<Array<Book>> => {
-    const sql = 'SELECT author, title FROM Book;';
-    return sqlite.executeSql(sql).then((res) => res.rows._array);
+    const sql = 'SELECT author, title, readCt, pageCt FROM Book;';
+    return sqlite.executeSql(sql).then((res) => res.rows._array.map(row => ({
+        author: row.author,
+        title: row.title,
+        readIt: row.readCt > 0,
+        pageCt: row.pageCt,
+    })));
 }
