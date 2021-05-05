@@ -3,16 +3,17 @@ import { Alert } from "react-native";
 import { connect } from "react-redux";
 import { useNavigation } from '@react-navigation/native';
 import { RootState } from "@/redux/store";
-import { getBookCount, getPageCount } from "@/redux/books/selectors";
+import { getBookCount, getPageCount, getReadCount } from "@/redux/books/selectors";
 import { Container, Content, Header, Text, Button, Left, Body, Right, Icon, Title, List, ListItem, Separator } from 'native-base';
 import * as sqlite from '@/providers/database/sqlite';
 
 interface SettingsParams { 
     bookCt: number;
     pageCt: number;
+    readCt: number;
 }
 
-const SettingsPage = ({ bookCt, pageCt }: SettingsParams) => {
+const SettingsPage = ({ bookCt, pageCt, readCt }: SettingsParams) => {
     const navigation = useNavigation();
     const purgeDb = () => {
         Alert.alert(
@@ -57,6 +58,10 @@ const SettingsPage = ({ bookCt, pageCt }: SettingsParams) => {
                         <Body><Text>{bookCt}</Text></Body>
                     </ListItem>
                     <ListItem>
+                        <Left><Text>Read Count</Text></Left>
+                        <Body><Text>{readCt}</Text></Body>
+                    </ListItem>
+                    <ListItem>
                         <Left><Text>Page Count</Text></Left>
                         <Body><Text>{pageCt}</Text></Body>
                     </ListItem>
@@ -80,7 +85,8 @@ const SettingsPage = ({ bookCt, pageCt }: SettingsParams) => {
 const mapStateToProps = (state: RootState): SettingsParams => {
     const bookCt = getBookCount(state);
     const pageCt = getPageCount(state);
-    return { bookCt, pageCt };
+    const readCt = getReadCount(state);
+    return { bookCt, pageCt, readCt };
 };
 
 export default connect(
