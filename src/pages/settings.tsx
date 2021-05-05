@@ -2,10 +2,17 @@ import React from "react";
 import { Alert } from "react-native";
 import { connect } from "react-redux";
 import { useNavigation } from '@react-navigation/native';
-import { Container, Content, Header, Text, Button, Left, Body, Right, Icon, Title, List, ListItem } from 'native-base';
+import { RootState } from "@/redux/store";
+import { getBookCount, getPageCount } from "@/redux/books/selectors";
+import { Container, Content, Header, Text, Button, Left, Body, Right, Icon, Title, List, ListItem, Separator } from 'native-base';
 import * as sqlite from '@/providers/database/sqlite';
 
-const SettingsPage = () => {
+interface SettingsParams { 
+    bookCt: number;
+    pageCt: number;
+}
+
+const SettingsPage = ({ bookCt, pageCt }: SettingsParams) => {
     const navigation = useNavigation();
     const purgeDb = () => {
         Alert.alert(
@@ -42,6 +49,20 @@ const SettingsPage = () => {
             </Header>
             <Content>
                 <List>
+                    <Separator bordered>
+                        <Text>Statistics</Text>
+                    </Separator>
+                    <ListItem>
+                        <Left><Text>Book Count</Text></Left>
+                        <Body><Text>{bookCt}</Text></Body>
+                    </ListItem>
+                    <ListItem>
+                        <Left><Text>Page Count</Text></Left>
+                        <Body><Text>{pageCt}</Text></Body>
+                    </ListItem>
+                    <Separator bordered>
+                        <Text>Maintenance</Text>
+                    </Separator>
                     <ListItem onPress={() => sqlite.exportDb()}>
                         <Left><Text>Export Database</Text></Left>
                         <Right><Icon ios='chevron-forward' android='arrow-forward' /></Right>
@@ -56,4 +77,12 @@ const SettingsPage = () => {
     );
 }
 
-export default connect()(SettingsPage);
+const mapStateToProps = (state: RootState): SettingsParams => {
+    const bookCt = getBookCount(state);
+    const pageCt = getPageCount(state);
+    return { bookCt, pageCt };
+};
+
+export default connect(
+    mapStateToProps
+)(SettingsPage);

@@ -8,6 +8,10 @@ Dev Info
 `npm install`
 `expo start`
 
+Publish
+-------
+`expo publish`
+
 Improvements
 -----
 * Purge should clear the mem store

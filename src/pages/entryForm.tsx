@@ -110,9 +110,9 @@ const EntryForm = ({ navigation, route }: Props) => {
         <Container>
             <Header>
                 <Left>
-                <Button transparent onPress={() => navigation.goBack()}>
-                    <Icon ios='chevron-back' android='arrow-back' />
-                </Button>
+                    <Button transparent onPress={() => navigation.goBack()}>
+                        <Icon ios='chevron-back' android='arrow-back' />
+                    </Button>
                 </Left>
                 <Body><Title>Book</Title></Body>
                 <Right>

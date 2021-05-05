@@ -13,7 +13,7 @@ interface BookListParams {
 const BookList = ({books}: BookListParams) => {
     const listItems = books.map((item: Book, index) => (
         <ListItem key={index}>
-            <BookItem author={item.author} title={item.title} />
+            <BookItem author={item.author ?? ''} title={item.title ?? ''} />
         </ListItem>
     ));
     return (
@@ -22,7 +22,7 @@ const BookList = ({books}: BookListParams) => {
         </List>
     );
 }
-const mapStateToProps = (state: RootState): { books: Array<Book> } => {
+const mapStateToProps = (state: RootState): BookListParams => {
     const books = getBooks(state);
     return { books };
 };
