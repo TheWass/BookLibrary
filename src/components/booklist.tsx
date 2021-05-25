@@ -1,4 +1,5 @@
 import React from 'react';
+import { Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { ListItem, Text, View } from 'native-base';
@@ -28,16 +29,11 @@ const BookList = ({books}: BookListParams) => {
     );
 
     const renderHiddenItem = ({ item }: { item: Book }) => (
-        <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-            <TouchableOpacity
-                onPress={() => console.log('Left ' + item.title)}
-            >
-                <Text>Left</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                onPress={() => console.log('Right ' + item.title)}
-            >
-                <Text>Right</Text>
+        <View style={{ flex: 1, flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#f0ad4e'}}>
+            <TouchableOpacity onPress={() => console.log('Right ' + item.title)}>
+                <View style={{flex: 1, justifyContent: 'center', marginHorizontal: 20 }} >
+                    <Text>Edit</Text>
+                </View>
             </TouchableOpacity>
         </View>
     );
@@ -55,12 +51,12 @@ const BookList = ({books}: BookListParams) => {
     return (
         <SwipeListView
             useSectionList
+            disableRightSwipe
             sections={sectionData}
             renderItem={renderItem}
             renderHiddenItem={renderHiddenItem}
             renderSectionHeader={renderSectionHeader}
-            leftOpenValue={75}
-            rightOpenValue={-150}
+            rightOpenValue={-Dimensions.get('window').width}
             previewRowKey={'0'}
             previewOpenValue={-40}
             previewOpenDelay={3000}
