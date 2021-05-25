@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigation } from '@react-navigation/native'
 import { connect } from "react-redux";
-import { Body, Button, Container, Content, Header, Icon, Left, Right, Title } from 'native-base';
+import { Body, Button, Container, Header, Icon, Left, Right, Title, View } from 'native-base';
 import BookList from '@/components/booklist';
 
 const BooksPage = () => {
@@ -21,9 +21,9 @@ const BooksPage = () => {
                     </Button>
                 </Right>
             </Header>
-            <Content>
+            <View style={{flex: 1}}>
                 <BookList />
-            </Content>
+            </View>
         </Container>
     );
 }
