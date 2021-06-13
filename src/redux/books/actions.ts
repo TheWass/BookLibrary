@@ -1,14 +1,19 @@
 import { Book } from '@/providers/database/models/Book';
-import { BooksAction, ADD_BOOK, REMOVE_BOOK, SET_BOOKS } from './types';
+import { BooksAction, ADD_BOOK, UPDATE_BOOK, REMOVE_BOOK, SET_BOOKS } from './types';
 
 export const addBook = (book: Book): BooksAction => ({
     type: ADD_BOOK,
     payload: { book }
 });
 
-export const removeBook = (isbn: string): BooksAction => ({
+export const updateBook = (rowId: number, book: Book): BooksAction => ({
+    type: UPDATE_BOOK,
+    payload: { rowId, book }
+});
+
+export const removeBook = (rowId: number): BooksAction => ({
     type: REMOVE_BOOK,
-    payload: { isbn }
+    payload: { rowId }
 });
 
 export const setBooks = (books: Array<Book>): BooksAction => ({

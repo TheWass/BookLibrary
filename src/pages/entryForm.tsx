@@ -5,7 +5,7 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from '@react-navigation/native';
 import { Container, Content, Form, Item, Input, Radio, Text, Label, Header, Body, Button, Icon, Left, Right, Title, ListItem, View } from 'native-base';
-import { addBook } from "@/redux/books/actions";
+import { addBook, updateBook } from "@/redux/books/actions";
 import { ReduxStore } from "@/redux/store";
 import { Book } from "@/providers/database/models/Book";
 import { saveBook } from '@/providers/database/models/Book';
@@ -22,10 +22,12 @@ type Props = {
 }
 
 const EntryForm = ({ navigation, route }: Props) => {
+    const [rowId] = React.useState(route.params?.rowId);
     const [author, setAuthor] = React.useState(route.params?.author ?? '');
     const [title, setTitle] = React.useState(route.params?.title ?? '');
     const [pageCt, setPageCt] = React.useState(route.params?.pageCt?.toString() ?? '');
     const [isbn, setIsbn] = React.useState(route.params?.isbn ?? '');
+    const [duplicate] = React.useState(route.params?.duplicate);
     const [isbnError, setIsbnError] = React.useState(false);
     const [readIt, setIsEnabled] = React.useState(true);
     const [hasPermission, setHasPermission] = React.useState(false);
@@ -63,15 +65,18 @@ const EntryForm = ({ navigation, route }: Props) => {
 
     const save = async () => {
         const book: Book = {
+            rowId,
             isbn,
             author,
             title,
             readIt,
-            pageCt: +pageCt
+            pageCt: +pageCt,
+            duplicate
         }
         if (title && author) {
             await saveBook(book);
-            ReduxStore.getStore().dispatch(addBook(book));
+            const action = rowId ? updateBook(rowId, book) : addBook(book);
+            ReduxStore.getStore().dispatch(action);
         }
         navigation.goBack();
     };
@@ -103,6 +108,7 @@ const EntryForm = ({ navigation, route }: Props) => {
         } else {
             setIsbnError(true);
         }
+        //TODO: Set duplicate here.
         setIsbn(value);
     }
 

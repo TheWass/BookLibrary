@@ -1,14 +1,16 @@
 import React from 'react';
-import { Text } from 'native-base';
+import { ListItem, Text } from 'native-base';
+import { Book } from '@/providers/database/models/Book';
 
 interface BookItemParams {
-    author: string;
-    title: string;
+    book: Book;
 }
 
-const BookItem = ({ author, title }: BookItemParams): JSX.Element => {
+const BookItem = ({ book }: BookItemParams): JSX.Element => {
     return (
-        <><Text style={{fontWeight: "bold"}}>{title}</Text><Text> {author}</Text></>
+        <ListItem noIndent={true} style={{ backgroundColor: book.duplicate ? 'lightgray' : 'white' }}>
+            <Text style={{fontWeight: "bold"}}>{book.title}</Text><Text> {book.author}</Text>
+        </ListItem>
     );
 }
 

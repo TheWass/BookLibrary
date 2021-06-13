@@ -2,6 +2,7 @@ import { Action } from 'redux';
 import { Book } from '@/providers/database/models/Book';
 
 export const ADD_BOOK = 'ADD_BOOK';
+export const UPDATE_BOOK = 'UPDATE_BOOK';
 export const REMOVE_BOOK = 'REMOVE_BOOK';
 export const SET_BOOKS = 'SET_BOOKS';
 
@@ -15,10 +16,18 @@ interface AddBookAction extends Action {
         book: Book;
     };
 }
+
+interface UpdateBookAction extends Action {
+    type: typeof UPDATE_BOOK;
+    payload: {
+        rowId: number;
+        book: Book;
+    };
+}
 interface RemoveBookAction extends Action {
     type: typeof REMOVE_BOOK;
     payload: {
-        isbn: string;
+        rowId: number;
     };
 }
 interface SetBooksAction extends Action {
@@ -28,4 +37,4 @@ interface SetBooksAction extends Action {
     };
 }
 
-export type BooksAction = AddBookAction | RemoveBookAction | SetBooksAction;
+export type BooksAction = AddBookAction | UpdateBookAction | RemoveBookAction | SetBooksAction;
