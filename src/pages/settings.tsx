@@ -66,6 +66,15 @@ const SettingsPage = ({ bookCt, pageCt, readCt }: SettingsParams) => {
                         <Body><Text>{pageCt}</Text></Body>
                     </ListItem>
                     <Separator bordered>
+                        <Text>Settings</Text>
+                    </Separator>
+                    <ListItem>
+                        <Left><Text>Sort Order</Text></Left>
+                        <Body>
+                            
+                        </Body>
+                    </ListItem>
+                    <Separator bordered>
                         <Text>Maintenance</Text>
                     </Separator>
                     <ListItem onPress={() => sqlite.exportDb()}>
