@@ -13,8 +13,8 @@ export const getSortedBooks = (store: RootState): Array<{ label: string, books: 
         const groupedBooks = store.books.books.groupBy([grouping]) as Array<Group<Book>>;
         return groupedBooks.map((group: Group<Book>) => ({
             label: group.key[grouping] as string,
-            books: group.items as Array<Book>
-        }));
+            books: group.items.sort((a, b) => (a[grouping] as string).localeCompare(b[grouping] as string)) as Array<Book>
+        })).sort((a, b) => a.label.localeCompare(b.label));
     } else {
         return [{
             label: 'All',
