@@ -1,7 +1,7 @@
 import { SQLResultSet } from 'expo-sqlite';
 import * as sqlite from '../sqlite';
 
-export interface Book {
+export interface Book extends Record<string, unknown> {
     rowId?: number;
     isbn?: string;
     author?: string;

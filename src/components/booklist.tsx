@@ -7,21 +7,18 @@ import { useNavigation } from '@react-navigation/native';
 import { Book } from '@/providers/database/models/Book';
 import BookItem from './bookitem';
 import { RootState } from '@/redux/store';
-import { getBooks } from '@/redux/books/selectors';
+import { getBooks, getSortedBooks } from '@/redux/books/selectors';
 
 interface BookListParams {
-    books: Array<Book>;
+    books: Array<{label: string, books: Array<Book>}>;
 }
 
 const BookList = ({books}: BookListParams) => {
     const navigation = useNavigation();
-    const sectionData = [{
-        title: 'Section',
-        data: books.map((book, key) =>({
-            ...book,
-            key
-        }))
-    }]
+    const sectionData = books.map(group => ({
+        title: group.label,
+        data: group.books,
+    }));
 
     const renderItem = ({ item }: { item: Book }) => (<BookItem book={ item ?? {}} />);
 
@@ -64,7 +61,7 @@ const BookList = ({books}: BookListParams) => {
     );
 }
 const mapStateToProps = (state: RootState): BookListParams => {
-    const books = getBooks(state);
+    const books = getSortedBooks(state);
     return { books };
 };
 

@@ -8,6 +8,7 @@ import Main from '@/Main';
 import { setBooks } from '@/redux/books/actions';
 import { ReduxStore } from '@/redux/store';
 import { getBooks } from '@/providers/database/models/Book';
+import '@/helpers/array';
 
 const App = (): JSX.Element => {
     const [isLoading, setIsLoading] = React.useState(true);

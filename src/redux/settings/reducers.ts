@@ -1,3 +1,4 @@
+import BookItem from '@/components/bookitem';
 import { SettingsState, EntryAction, SET_SORT } from './types';
 
 const initialState: SettingsState = {

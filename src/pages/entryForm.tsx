@@ -51,7 +51,9 @@ const EntryForm = ({ navigation, route }: Props) => {
             setTitle(book.title ?? '');
             setPageCt(book.pageCt?.toString() ?? '');
         } catch (ex) {
-            setErrorMsg(ex);
+            if (typeof ex == 'string'){
+                setErrorMsg(ex);
+            }
             console.error(ex);
         }
     };
