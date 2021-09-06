@@ -2,19 +2,28 @@ import React from "react";
 import { Alert } from "react-native";
 import { connect } from "react-redux";
 import { useNavigation } from '@react-navigation/native';
+import { Picker } from '@react-native-picker/picker';
 import { RootState } from "@/redux/store";
 import { getBookCount, getPageCount, getReadCount } from "@/redux/books/selectors";
+import { setSortOrder } from "@/redux/settings/actions";
 import { Container, Content, Header, Text, Button, Left, Body, Right, Icon, Title, List, ListItem, Separator } from 'native-base';
 import * as sqlite from '@/providers/database/sqlite';
+import { getSortOrder } from "@/redux/settings/selectors";
 
 interface SettingsParams { 
     bookCt: number;
     pageCt: number;
     readCt: number;
+    sortOrder: string;
+    setSortOrder: typeof setSortOrder;
 }
 
-const SettingsPage = ({ bookCt, pageCt, readCt }: SettingsParams) => {
+const SettingsPage = ({ bookCt, pageCt, readCt, sortOrder, setSortOrder }: SettingsParams) => {
     const navigation = useNavigation();
+
+    //#endregion
+
+    //#region Maintenance Functions
     const purgeDb = () => {
         Alert.alert(
             "Delete Database",
@@ -25,6 +34,7 @@ const SettingsPage = ({ bookCt, pageCt, readCt }: SettingsParams) => {
             ]
         );
     }
+
     const purgeCallback = () => {
         sqlite.wipeDb().finally(() => {
             Alert.alert(
@@ -36,6 +46,7 @@ const SettingsPage = ({ bookCt, pageCt, readCt }: SettingsParams) => {
             );
         });
     }
+    //#endregion
 
     return (
         <Container>
@@ -71,7 +82,11 @@ const SettingsPage = ({ bookCt, pageCt, readCt }: SettingsParams) => {
                     <ListItem>
                         <Left><Text>Sort Order</Text></Left>
                         <Body>
-                            
+                            <Picker selectedValue={sortOrder} onValueChange={(itemValue) => setSortOrder(itemValue)}>
+                                <Picker.Item label="Insert Order" value="" />
+                                <Picker.Item label="Author" value="author" />
+                                <Picker.Item label="Title" value="title" />
+                            </Picker>
                         </Body>
                     </ListItem>
                     <Separator bordered>
@@ -91,13 +106,15 @@ const SettingsPage = ({ bookCt, pageCt, readCt }: SettingsParams) => {
     );
 }
 
-const mapStateToProps = (state: RootState): SettingsParams => {
+const mapStateToProps = (state: RootState): { bookCt: number, pageCt: number, readCt: number, sortOrder: string } => {
     const bookCt = getBookCount(state);
     const pageCt = getPageCount(state);
     const readCt = getReadCount(state);
-    return { bookCt, pageCt, readCt };
+    const sortOrder = getSortOrder(state);
+    return { bookCt, pageCt, readCt, sortOrder };
 };
 
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    { setSortOrder }
 )(SettingsPage);

@@ -10,7 +10,7 @@ import { ReduxStore } from "@/redux/store";
 import { Book } from "@/providers/database/models/Book";
 import { saveBook } from '@/providers/database/models/Book';
 import * as OpenLibraryApi from '@/providers/OpenLibrary/api';
-import { isValidIsbn } from "@/helpers";
+import { isValidIsbn } from "@/helpers/book";
 
 type RouteProps = {
     Entry: Book;

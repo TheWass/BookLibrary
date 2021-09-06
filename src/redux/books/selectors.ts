@@ -6,3 +6,6 @@ export const getBook = (store: RootState, isbn: string): Book | undefined => sto
 export const getBookCount = (store: RootState): number => store.books.books.length;
 export const getPageCount = (store: RootState): number => store.books.books.reduce((acc: number, cur: Book) => acc += cur.pageCt ?? 0, 0);
 export const getReadCount = (store: RootState): number => store.books.books.reduce((acc: number, cur: Book) => acc += cur.readIt ? 1 : 0, 0);
+export const getSortedBooks = (store: RootState): Array<{ label: string, books: Array<Book> }> => {
+    return [ {label: 'All', books: store.books.books} ];
+}
