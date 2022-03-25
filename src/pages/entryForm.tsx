@@ -5,10 +5,10 @@ import { BarCodeScanner } from "expo-barcode-scanner";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from '@react-navigation/native';
 import { Container, Content, Form, Item, Input, Radio, Text, Label, Header, Body, Button, Icon, Left, Right, Title, ListItem, View } from 'native-base';
-import { addBook, updateBook } from "@/redux/books/actions";
+import { addBook, removeBook, updateBook } from "@/redux/books/actions";
 import { ReduxStore } from "@/redux/store";
 import { Book } from "@/providers/database/models/Book";
-import { saveBook } from '@/providers/database/models/Book';
+import SqlBook from '@/providers/database/models/Book';
 import * as OpenLibraryApi from '@/providers/OpenLibrary/api';
 import { isValidIsbn } from "@/helpers/book";
 
@@ -76,12 +76,20 @@ const EntryForm = ({ navigation, route }: Props) => {
             duplicate
         }
         if (title && author) {
-            await saveBook(book);
+            await SqlBook.saveBook(book);
             const action = rowId ? updateBook(rowId, book) : addBook(book);
             ReduxStore.getStore().dispatch(action);
         }
         navigation.goBack();
     };
+
+    const remove = async () => {
+        if (rowId) {
+            await SqlBook.deleteBook(rowId);
+            ReduxStore.getStore().dispatch(removeBook(rowId));
+        }
+        navigation.goBack();
+    }
 
     const message = () => {
         if (errorMsg) {
@@ -91,7 +99,7 @@ const EntryForm = ({ navigation, route }: Props) => {
             return (<Text style={styles.scanProcess}>Looking up book...</Text>);
         }
         return(<></>);
-    }
+    };
 
     const scanner = () => {
         if (scanned) {
@@ -102,7 +110,7 @@ const EntryForm = ({ navigation, route }: Props) => {
                 style={StyleSheet.absoluteFillObject}
             />);
         }
-    }
+    };
 
     const validateIsbn = (value: string) => {
         if (value.length == 0 || isValidIsbn(value)) {
@@ -112,7 +120,7 @@ const EntryForm = ({ navigation, route }: Props) => {
         }
         //TODO: Set duplicate here.
         setIsbn(value);
-    }
+    };
 
     return (
         <Container>
@@ -163,6 +171,7 @@ const EntryForm = ({ navigation, route }: Props) => {
                         <Input value={pageCt} onChangeText={setPageCt} keyboardType='numeric' />
                     </Item>
                 </Form>
+                <Button onPress={remove}><Text>Remove</Text></Button>
             </Content>
         </Container>
     );
