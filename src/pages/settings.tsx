@@ -1,28 +1,28 @@
 import React from "react";
-import { Alert } from "react-native";
+import { Alert, Button, Platform, SafeAreaView, ScrollView, StyleSheet, Text, View, } from "react-native";
 import { connect } from "react-redux";
-import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootState } from "@/redux/store";
 import { getBookCount, getPageCount, getReadCount } from "@/redux/books/selectors";
 import { setSortOrder } from "@/redux/settings/actions";
-import { Container, Content, Header, Text, Button, Left, Body, Right, Icon, Title, List, ListItem, Separator } from 'native-base';
+import { EntryAction } from "@/redux/settings/types";
 import * as sqlite from '@/providers/database/sqlite';
 import { getSortOrder } from "@/redux/settings/selectors";
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { RootStackParamList } from "@/Main";
+import { useNavigation } from "@react-navigation/native";
 
-interface SettingsParams { 
+export type SettingsProps = { 
     bookCt: number;
     pageCt: number;
     readCt: number;
     sortOrder: string;
-    setSortOrder: typeof setSortOrder;
+    setSortOrder: (sortOrder: string) => EntryAction;
 }
 
-const SettingsPage = ({ bookCt, pageCt, readCt, sortOrder, setSortOrder }: SettingsParams) => {
-    const navigation = useNavigation();
-
-    //#endregion
-
+const SettingsPage = ({ bookCt, pageCt, readCt, sortOrder, setSortOrder }: SettingsProps) => {
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     //#region Maintenance Functions
     const purgeDb = () => {
         Alert.alert(
@@ -48,63 +48,81 @@ const SettingsPage = ({ bookCt, pageCt, readCt, sortOrder, setSortOrder }: Setti
     }
     //#endregion
 
-    return (
-        <Container>
-            <Header>
-                <Left>
-                <Button transparent onPress={() => navigation.goBack()}>
-                    <Icon ios='chevron-back' android='arrow-back' />
-                </Button>
-                </Left>
-                <Body><Title>Settings</Title></Body>
-                <Right></Right>
-            </Header>
-            <Content>
-                <List>
-                    <Separator bordered>
-                        <Text>Statistics</Text>
-                    </Separator>
-                    <ListItem>
-                        <Left><Text>Book Count</Text></Left>
-                        <Body><Text>{bookCt}</Text></Body>
-                    </ListItem>
-                    <ListItem>
-                        <Left><Text>Read Count</Text></Left>
-                        <Body><Text>{readCt}</Text></Body>
-                    </ListItem>
-                    <ListItem>
-                        <Left><Text>Page Count</Text></Left>
-                        <Body><Text>{pageCt}</Text></Body>
-                    </ListItem>
-                    <Separator bordered>
-                        <Text>Settings</Text>
-                    </Separator>
-                    <ListItem>
-                        <Left><Text>Sort Order</Text></Left>
-                        <Body>
-                            <Picker selectedValue={sortOrder} onValueChange={(itemValue) => setSortOrder(itemValue)}>
-                                <Picker.Item label="Insert Order" value="" />
-                                <Picker.Item label="Author" value="author" />
-                                <Picker.Item label="Title" value="title" />
-                            </Picker>
-                        </Body>
-                    </ListItem>
-                    <Separator bordered>
-                        <Text>Maintenance</Text>
-                    </Separator>
-                    <ListItem onPress={() => sqlite.exportDb()}>
-                        <Left><Text>Export Database</Text></Left>
-                        <Right><Icon ios='chevron-forward' android='arrow-forward' /></Right>
-                    </ListItem>
-                    <ListItem onPress={purgeDb}>
-                        <Left><Text style={{ color: 'red' }}>Purge Database</Text></Left>
-                        <Right><Icon ios='chevron-forward' android='arrow-forward' /></Right>
-                    </ListItem>
-                </List>
-            </Content>
-        </Container>
-    );
+    return (<SafeAreaView>
+        <View style={styles.header}>
+            <View style={styles.headerItem}>
+                <FontAwesome.Button name={ Platform.OS == 'ios' ? 'chevron-left' : 'arrow-left' } onPress={navigation.goBack} />
+            </View>
+            <View style={styles.headerItem}>
+                <Text>Settings</Text>
+            </View>
+            <View style={styles.headerItem}></View>
+        </View>
+        <ScrollView>
+            <View style={styles.listContainer}>
+                <View style={styles.listHeader}>
+                    <Text>Statistics</Text>
+                </View>
+                <View style={styles.listItem}>
+                    <Text>Book Count</Text>
+                    <Text>{bookCt}</Text>
+                </View>
+                <View style={styles.listItem}>
+                    <Text>Read Count</Text>
+                    <Text>{readCt}</Text>
+                </View>
+                <View style={styles.listItem}>
+                    <Text>Page Count</Text>
+                    <Text>{pageCt}</Text>
+                </View>
+            </View>
+            <View style={styles.listContainer}>
+                <View style={styles.listHeader}>
+                    <Text>Settings</Text>
+                </View>
+                <View style={styles.listItem}>
+                    <Text>Sort Order</Text>
+                    <Picker selectedValue={sortOrder} onValueChange={setSortOrder}>
+                        <Picker.Item label="Insert Order" value="" />
+                        <Picker.Item label="Author" value="author" />
+                        <Picker.Item label="Title" value="title" />
+                    </Picker>
+                </View>
+            </View>
+            <View style={styles.listContainer}>
+                <View style={styles.listHeader}>
+                    <Text>Maintenance</Text>
+                </View>
+                <View style={styles.listItem}>
+                    <Button title="Export Database" onPress={sqlite.exportDb} />
+                </View>
+                <View style={styles.listItem}>
+                    <Button title="Purge Database" onPress={purgeDb} />
+                </View>
+            </View>
+        </ScrollView>
+    </SafeAreaView>);
 }
+
+const styles = StyleSheet.create({
+    header: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    headerItem: {
+        alignItems: "center",
+    },
+    listContainer: {
+
+    },
+    listHeader: {
+
+    },
+    listItem: {
+
+    }
+});
 
 const mapStateToProps = (state: RootState): { bookCt: number, pageCt: number, readCt: number, sortOrder: string } => {
     const bookCt = getBookCount(state);

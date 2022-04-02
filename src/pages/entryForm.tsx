@@ -1,27 +1,29 @@
 import React from "react";
-import { StyleSheet, InputAccessoryView, Button as RNButton } from "react-native"
+import { Button, InputAccessoryView, SafeAreaView, StyleSheet, Switch, Text, TextInput, View } from "react-native"
 import { connect } from "react-redux";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RouteProp } from '@react-navigation/native';
-import { Container, Content, Form, Item, Input, Radio, Text, Label, Header, Body, Button, Icon, Left, Right, Title, ListItem, View } from 'native-base';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { addBook, removeBook, updateBook } from "@/redux/books/actions";
 import { ReduxStore } from "@/redux/store";
 import { Book } from "@/providers/database/models/Book";
 import SqlBook from '@/providers/database/models/Book';
 import * as OpenLibraryApi from '@/providers/OpenLibrary/api';
 import { isValidIsbn } from "@/helpers/book";
+import { Platform } from "expo-modules-core";
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-type RouteProps = {
+export type EntryFormProps = {
     Entry: Book;
 }
 
-type Props = {
-    navigation: StackNavigationProp<RouteProps, 'Entry'>;
-    route: RouteProp<RouteProps, 'Entry'>;
+type RouteProps = {
+    navigation: StackNavigationProp<EntryFormProps, 'Entry'>;
+    route: RouteProp<EntryFormProps, 'Entry'>;
 }
 
-const EntryForm = ({ navigation, route }: Props) => {
+const EntryForm = ({ navigation, route }: RouteProps) => {
     const [rowId] = React.useState(route.params?.rowId);
     const [author, setAuthor] = React.useState(route.params?.author ?? '');
     const [title, setTitle] = React.useState(route.params?.title ?? '');
@@ -122,62 +124,62 @@ const EntryForm = ({ navigation, route }: Props) => {
         setIsbn(value);
     };
 
-    return (
-        <Container>
-            <Header>
-                <Left>
-                    <Button transparent onPress={() => navigation.goBack()}>
-                        <Icon ios='chevron-back' android='arrow-back' />
-                    </Button>
-                </Left>
-                <Body><Title>Book</Title></Body>
-                <Right>
-                    <Button transparent onPress={save}>
-                        <Text>Done</Text>
-                    </Button>
-                </Right>
-            </Header>
-            <Content>
-                <View style={{ height: 100, width:'100%' }}>{scanner()}</View>
-                <Form>
-                    <Item fixedLabel>
-                        <Label>Title</Label>
-                        <Input value={title} autoCapitalize='words' onChangeText={setTitle} />
-                    </Item>
-                    <Item fixedLabel>
-                        <Label>Author</Label>
-                        <Input value={author} autoCapitalize='words' onChangeText={setAuthor} />
-                    </Item>
-                    <Item fixedLabel error={isbnError}>
-                        <Label>ISBN</Label>
-                        <Input value={isbn} onChangeText={validateIsbn} keyboardType='numeric' inputAccessoryViewID='enterX' />
-                        <InputAccessoryView nativeID='enterX'>
-                            <View>
-                                <RNButton title='X' onPress={() => setIsbn(isbn + 'X')} />
-                            </View>
-                        </InputAccessoryView>
-                        { isbnError ? <Icon name='close-circle' style={{color:'red'}}  /> : null}
-                    </Item>
-                    <ListItem onPress={() => setIsEnabled(previousState => !previousState)}>
-                        <Left>
-                            <Text>Read it?</Text>
-                        </Left>
-                        <Body>
-                            <Radio selected={readIt} onPress={() => setIsEnabled(previousState => !previousState)} />
-                        </Body>
-                    </ListItem>
-                    <Item fixedLabel>
-                        <Label>Page Count</Label>
-                        <Input value={pageCt} onChangeText={setPageCt} keyboardType='numeric' />
-                    </Item>
-                </Form>
-                <Button onPress={remove}><Text>Remove</Text></Button>
-            </Content>
-        </Container>
-    );
+    return (<SafeAreaView>
+        <View style={styles.header}>
+            <View style={styles.headerItem}>
+                <FontAwesome.Button name={ Platform.OS == 'ios' ? 'chevron-left' : 'arrow-left' } onPress={() => navigation.goBack()} />
+            </View>
+            <View style={styles.headerItem}>
+                <Text>Book</Text>
+            </View>
+            <View style={styles.headerItem}>
+                <Button title='Done' onPress={save}></Button>
+            </View>
+        </View>
+        <View>
+            <View style={{ height: 100, width:'100%' }}>{scanner()}</View>
+            <View>
+                <Text>Title</Text>
+                <TextInput value={title} onChangeText={setTitle} autoCapitalize='words' />
+            </View>
+            <View>
+                <Text>Author</Text>
+                <TextInput value={author} onChangeText={setAuthor} autoCapitalize='words' />
+            </View>
+            <View>
+                <Text>ISBN</Text>
+                <TextInput value={isbn} onChangeText={validateIsbn} keyboardType='numeric' inputAccessoryViewID='enterX' />
+                <InputAccessoryView nativeID='enterX'>
+                    <View>
+                        <Button title='X' onPress={() => setIsbn(isbn + 'X')} />
+                    </View>
+                </InputAccessoryView>
+                { isbnError ? <FontAwesome name='times-circle' style={{color:'red'}}  /> : null}
+            </View>
+            <View>
+                <Text>Read it?</Text>
+                <Switch value={readIt} onValueChange={() => setIsEnabled(previousState => !previousState)} />
+            </View>
+            <View>
+                <Text>Page Count</Text>
+                <TextInput value={pageCt} onChangeText={setPageCt} keyboardType='numeric' />
+            </View>
+        </View>
+        <View>
+            <Button title='Remove' onPress={remove} />
+        </View>
+    </SafeAreaView>);
 }
 
 const styles = StyleSheet.create({
+    header: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    headerItem: {
+        alignItems: "center",
+    },
     barcodeMask: {
         flex: 1,
         flexDirection: 'column',

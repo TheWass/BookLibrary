@@ -1,7 +1,7 @@
 import React from 'react';
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
-import { Ionicons } from '@expo/vector-icons'
+import { Ionicons, FontAwesome } from '@expo/vector-icons'
 import { purgeApiCalls } from '@/providers/database/models/ApiCall';
 import { createTables } from '@/providers/database/model';
 import Main from '@/Main';
@@ -16,9 +16,8 @@ const App = (): JSX.Element => {
     React.useEffect(() => {
         const timeout = setTimeout(async () => {
             await Font.loadAsync({
-                Roboto: require('native-base/Fonts/Roboto.ttf'),
-                Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf'),
                 ...Ionicons.font,
+                ...FontAwesome.font
             });
             // TODO: Parse this out into a service...
             await createTables();

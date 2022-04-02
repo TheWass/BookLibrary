@@ -32,7 +32,7 @@ export const exportDb = async (): Promise<void> => {
     Share.shareAsync(file);
 };
 
-export const executeSql = async (sql: string, data?: Array<string|number|boolean>): Promise<SQLite.SQLResultSet> => {
+export const executeSql = async (sql: string, data?: Array<string|number>): Promise<SQLite.SQLResultSet> => {
     const db = SQLite.openDatabase(DATABASE_NAME);
     return new Promise((resolve, reject) => {
         db.transaction((tx) => {
@@ -41,7 +41,7 @@ export const executeSql = async (sql: string, data?: Array<string|number|boolean
     });
 };
 
-export const executeSqlTx = async (tx: SQLite.SQLTransaction, sql: string, data?: Array<string|number|boolean>): Promise<SQLite.SQLResultSet> => {
+export const executeSqlTx = async (tx: SQLite.SQLTransaction, sql: string, data?: Array<string|number>): Promise<SQLite.SQLResultSet> => {
     return new Promise((resolve, reject) => {
         tx.executeSql(sql, data, (_tx, res) => resolve(res), (_tx, err) => { reject(err); return false; });
     });
