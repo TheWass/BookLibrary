@@ -1,7 +1,8 @@
-import { BooksState, BooksAction, ADD_BOOK, REMOVE_BOOK, SET_BOOKS, UPDATE_BOOK } from './types';
+import { BooksState, BooksAction, ADD_BOOK, REMOVE_BOOK, SET_BOOKS, SET_FILTER, UPDATE_BOOK } from './types';
 
 const initialState: BooksState = {
-    books: []
+    books: [],
+    filter: ""
 };
 
 export function booksReducer(
@@ -31,6 +32,12 @@ export function booksReducer(
             return {
                 ...state,
                 books: action.payload.books.map((book) => ({...book}))
+            };
+        }
+        case SET_FILTER: {
+            return {
+                ...state,
+                filter: action.payload.filter
             };
         }
         default:

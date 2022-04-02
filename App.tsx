@@ -7,7 +7,7 @@ import { createTables } from '@/providers/database/model';
 import Main from '@/Main';
 import { setBooks } from '@/redux/books/actions';
 import { ReduxStore } from '@/redux/store';
-import { getBooks } from '@/providers/database/models/Book';
+import SqlBook from '@/providers/database/models/Book';
 import '@/helpers/array';
 
 const App = (): JSX.Element => {
@@ -23,9 +23,8 @@ const App = (): JSX.Element => {
             // TODO: Parse this out into a service...
             await createTables();
             await purgeApiCalls();
-            const books = await getBooks();
+            const books = await SqlBook.getBooks();
             ReduxStore.getStore().dispatch(setBooks(books));
-
             setIsLoading(false);
         }, 1000)
   
