@@ -2,7 +2,7 @@ import React from "react";
 import { Alert } from "react-native";
 import { connect } from "react-redux";
 import { useNavigation } from '@react-navigation/native';
-import { Picker } from '@react-native-picker/picker';
+import { Picker as SelectPicker } from '@react-native-picker/picker';
 import { RootState } from "@/redux/store";
 import { getBookCount, getPageCount, getReadCount } from "@/redux/books/selectors";
 import { setSortOrder } from "@/redux/settings/actions";
@@ -82,11 +82,11 @@ const SettingsPage = ({ bookCt, pageCt, readCt, sortOrder, setSortOrder }: Setti
                     <ListItem>
                         <Left><Text>Sort Order</Text></Left>
                         <Body>
-                            <Picker selectedValue={sortOrder} onValueChange={(itemValue) => setSortOrder(itemValue)}>
-                                <Picker.Item label="Insert Order" value="" />
-                                <Picker.Item label="Author" value="author" />
-                                <Picker.Item label="Title" value="title" />
-                            </Picker>
+                            <SelectPicker selectedValue={sortOrder} onValueChange={(itemValue) => setSortOrder(itemValue)}>
+                                <SelectPicker.Item label="Insert Order" value="" />
+                                <SelectPicker.Item label="Author" value="author" />
+                                <SelectPicker.Item label="Title" value="title" />
+                            </SelectPicker>
                         </Body>
                     </ListItem>
                     <Separator bordered>
