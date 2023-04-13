@@ -1,25 +1,18 @@
 import React from "react";
-import { StyleSheet, InputAccessoryView, Button as RNButton } from "react-native"
+import { Button, InputAccessoryView, StyleSheet, Text, TextInput, View } from "react-native"
+import Checkbox from 'expo-checkbox';
 import { connect } from "react-redux";
 import { BarCodeScanner } from "expo-barcode-scanner";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RouteProp } from '@react-navigation/native';
-import { Container, Content, Form, Item, Input, Radio, Text, Label, Header, Body, Button, Icon, Left, Right, Title, ListItem, View } from 'native-base';
+import { StackScreenProps } from '@react-navigation/stack';
 import { addBook, removeBook, updateBook } from "@/redux/books/actions";
 import { ReduxStore } from "@/redux/store";
 import { Book } from "@/providers/database/models/Book";
+import { isValidIsbn } from "@/helpers/book";
+import { PageParamList } from "@/Main";
 import SqlBook from '@/providers/database/models/Book';
 import * as OpenLibraryApi from '@/providers/OpenLibrary/api';
-import { isValidIsbn } from "@/helpers/book";
 
-type RouteProps = {
-    Entry: Book;
-}
-
-type Props = {
-    navigation: StackNavigationProp<RouteProps, 'Entry'>;
-    route: RouteProp<RouteProps, 'Entry'>;
-}
+type Props = StackScreenProps<PageParamList, 'EntryForm'>
 
 const EntryForm = ({ navigation, route }: Props) => {
     const [rowId] = React.useState(route.params?.rowId);
@@ -29,7 +22,7 @@ const EntryForm = ({ navigation, route }: Props) => {
     const [isbn, setIsbn] = React.useState(route.params?.isbn ?? '');
     const [duplicate] = React.useState(route.params?.duplicate);
     const [isbnError, setIsbnError] = React.useState(false);
-    const [readIt, setIsEnabled] = React.useState(true);
+    const [readIt, setReadIt] = React.useState(true);
     const [hasPermission, setHasPermission] = React.useState(false);
     const [scanned, setScanned] = React.useState(false);
     const [errorMsg, setErrorMsg] = React.useState('');
@@ -123,57 +116,37 @@ const EntryForm = ({ navigation, route }: Props) => {
     };
 
     return (
-        <Container>
-            <Header>
-                <Left>
-                    <Button transparent onPress={() => navigation.goBack()}>
-                        <Icon ios='chevron-back' android='arrow-back' />
-                    </Button>
-                </Left>
-                <Body><Title>Book</Title></Body>
-                <Right>
-                    <Button transparent onPress={save}>
-                        <Text>Done</Text>
-                    </Button>
-                </Right>
-            </Header>
-            <Content>
-                <View style={{ height: 100, width:'100%' }}>{scanner()}</View>
-                <Form>
-                    <Item fixedLabel>
-                        <Label>Title</Label>
-                        <Input value={title} autoCapitalize='words' onChangeText={setTitle} />
-                    </Item>
-                    <Item fixedLabel>
-                        <Label>Author</Label>
-                        <Input value={author} autoCapitalize='words' onChangeText={setAuthor} />
-                    </Item>
-                    <Item fixedLabel error={isbnError}>
-                        <Label>ISBN</Label>
-                        <Input value={isbn} onChangeText={validateIsbn} keyboardType='numeric' inputAccessoryViewID='enterX' />
-                        <InputAccessoryView nativeID='enterX'>
-                            <View>
-                                <RNButton title='X' onPress={() => setIsbn(isbn + 'X')} />
-                            </View>
-                        </InputAccessoryView>
-                        { isbnError ? <Icon name='close-circle' style={{color:'red'}}  /> : null}
-                    </Item>
-                    <ListItem onPress={() => setIsEnabled(previousState => !previousState)}>
-                        <Left>
-                            <Text>Read it?</Text>
-                        </Left>
-                        <Body>
-                            <Radio selected={readIt} onPress={() => setIsEnabled(previousState => !previousState)} />
-                        </Body>
-                    </ListItem>
-                    <Item fixedLabel>
-                        <Label>Page Count</Label>
-                        <Input value={pageCt} onChangeText={setPageCt} keyboardType='numeric' />
-                    </Item>
-                </Form>
-                <Button onPress={remove}><Text>Remove</Text></Button>
-            </Content>
-        </Container>
+        <View>
+            <View style={{ height: 100, width:'100%' }}>{scanner()}</View>
+            <View>
+                <Text>Title</Text>
+                <TextInput value={title} autoCapitalize='words' onChangeText={setTitle} />
+            </View>
+            <View>
+                <Text>Author</Text>
+                <TextInput value={author} autoCapitalize='words' onChangeText={setAuthor} />
+            </View>
+            <View>
+                <Text>ISBN</Text>
+                <TextInput value={isbn} onChangeText={validateIsbn} keyboardType='numeric' inputAccessoryViewID='enterX' />
+                <InputAccessoryView nativeID='enterX'>
+                    <View>
+                        <Button title='X' onPress={() => setIsbn(isbn + 'X')} />
+                    </View>
+                </InputAccessoryView>
+                { isbnError ? <Text>Invalid ISBN</Text> : null }
+            </View>
+            <View>
+                <Text>Read it?</Text>
+                <Checkbox value={readIt} onValueChange={setReadIt} />
+            </View>
+            <View>
+                <Text>Page Ct</Text>
+                <TextInput value={pageCt} onChangeText={setPageCt} keyboardType='numeric' />
+            </View>
+            <Button title='Save' onPress={save} />
+            <Button title='Remove' onPress={remove} />
+        </View>
     );
 }
 

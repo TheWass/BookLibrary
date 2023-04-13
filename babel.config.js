@@ -5,6 +5,12 @@ module.exports = function(api) {
         presets: ['babel-preset-expo'],
         plugins: [[
             'module-resolver', {
+                extensions: [
+                    '.js', '.jsx', '.ts', '.tsx',
+                    '.android.js', '.android.tsx',
+                    '.ios.js', '.ios.tsx',
+                    '.png',
+                ],
                 root: ['.'],
                 alias: {
                     '@': './src'

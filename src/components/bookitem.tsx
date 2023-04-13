@@ -1,6 +1,6 @@
 import React from 'react';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ListItem, Text } from 'native-base';
 import { Book } from '@/providers/database/models/Book';
 
 interface BookItemParams {
@@ -10,13 +10,25 @@ interface BookItemParams {
 const BookItem = ({ book }: BookItemParams): JSX.Element => {
     const navigation = useNavigation();
     const onPress = () => {
-        navigation.navigate('Entry', book);
+        navigation.navigate('EntryForm', book);
     }
     return (
-        <ListItem noIndent={true} style={{ backgroundColor: book.duplicate ? 'lightgray' : 'white' }} onPress={onPress}>
-            <Text style={{fontWeight: "bold"}}>{book.title}</Text><Text> {book.author}</Text>
-        </ListItem>
+        <TouchableOpacity style={book.duplicate ? styles.itemDup : styles.item } onPress={onPress}>
+            <Text style={styles.label}>{book.title}</Text><Text> {book.author}</Text>
+        </TouchableOpacity>
     );
 }
+
+const styles = StyleSheet.create({
+    item: {
+        backgroundColor: 'white'
+    },
+    itemDup: {
+        backgroundColor: 'lightgray'
+    },
+    label: {
+        fontWeight: "bold"
+    }
+})
 
 export default BookItem;

@@ -1,7 +1,6 @@
 import React from 'react';
-import { SectionList, SectionListData, StyleSheet, TextInput, View } from 'react-native';
+import { SectionList, SectionListData, StyleSheet, Text, TextInput, View } from 'react-native';
 import { connect } from 'react-redux';
-import { ListItem, Text } from 'native-base';
 import { Book } from '@/providers/database/models/Book';
 import BookItem from './bookitem';
 import { ReduxStore, RootState } from '@/redux/store';
@@ -22,9 +21,9 @@ const BookList = ({ books, filter }: BookListParams) => {
     const renderItem = ({ item }: { item: Book }) => (<BookItem book={ item ?? {}} />);
 
     const renderSectionHeader = ({ section }: { section: SectionListData<Book>}) => (
-        <ListItem itemDivider>
+        <View>
             <Text style={{fontWeight: 'bold'}}>{section.title}</Text>
-        </ListItem>
+        </View>
     );
 
     const onSearchChange = (search: string) => {

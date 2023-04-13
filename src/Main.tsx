@@ -1,56 +1,47 @@
 import 'react-native-gesture-handler';
 import React from 'react';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Provider } from 'react-redux';
+import { StatusBar } from 'expo-status-bar';
 import { enableScreens } from 'react-native-screens';
-import { createNativeStackNavigator } from 'react-native-screens/native-stack';
-import { Root } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { StatusBar } from 'expo-status-bar';
 
 import { ReduxStore } from '@/redux/store';
 import BooksPage from '@/pages/books';
 import EntryFormPage from '@/pages/entryForm';
 import SettingsPage from '@/pages/settings';
+import { Book } from '@/providers/database/models/Book';
+
+export type PageParamList = {
+    Books: undefined;
+    Settings: undefined;
+    EntryForm: Book;
+}
 
 enableScreens()
-const MainStack = createStackNavigator();
-const RootStack = createNativeStackNavigator();
+const Stack = createStackNavigator<PageParamList>();
 
-function MainStackScreen() {
-    return (<MainStack.Navigator>
-        <MainStack.Screen 
-            name="Books"
-            component={BooksPage}
-            options={{ headerShown: false }}
-        />
-        <MainStack.Screen 
-            name="Settings"
-            component={SettingsPage}
-            options={{ headerShown: false }}
-        />
-        <MainStack.Screen 
-            name="Entry"
-            component={EntryFormPage}
-            options={{ headerShown: false }}
-        />
-    </MainStack.Navigator>);
-  }
-
+const headerLeft = () => (
+    <Ionicons name='settings' size={32} />
+)
+const headerRight = () => (
+    <Ionicons name='add' size={32} />
+)
 
 export default function Main(): JSX.Element {
-    return (<Root>
+    return (
         <Provider store={ ReduxStore.getStore() }>
-            <StatusBar style="auto" />
             <NavigationContainer>
-                <RootStack.Navigator mode="modal" screenOptions={{ stackPresentation: 'formSheet' }}>
-                    <RootStack.Screen
-                        name="Main"
-                        component={MainStackScreen}
-                        options={{ headerShown: false }}
-                    />
-                </RootStack.Navigator>
+            <StatusBar style="auto" />
+                <Stack.Navigator>
+                    <Stack.Group screenOptions={{ presentation: 'modal' }}>
+                        <Stack.Screen name="Books" component={BooksPage} options={{ headerLeft, headerRight }} />
+                        <Stack.Screen name="Settings" component={SettingsPage} />
+                        <Stack.Screen name="EntryForm" component={EntryFormPage} />
+                    </Stack.Group>
+                </Stack.Navigator>
             </NavigationContainer>
         </Provider>
-    </Root>);
+    );
 }
