@@ -34,7 +34,8 @@
     "react-native-swipe-list-view": "^3.2.7",
     "react-native-web": "~0.18.11",
     "react-redux": "^7.2.9",
-    "redux": "^4.2.1"
+    "redux": "^4.2.1",
+    "expo-document-picker": "~11.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

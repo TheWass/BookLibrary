@@ -40,7 +40,8 @@ const SettingsPage = ({ bookCt, pageCt, readCt, sortOrder, setSortOrder }: Setti
             );
         });
     }
-    return (<View>
+
+    return (<View style={styles.content}>
         <View>
             <Text>Statistics</Text>
             <View>
@@ -73,14 +74,20 @@ const SettingsPage = ({ bookCt, pageCt, readCt, sortOrder, setSortOrder }: Setti
                 <Button title='Export DB' onPress={sqlite.exportDb} />
             </View>
             <View>
-                <Button title='Purge DB' onPress={purgeDb} />
+                <Button color='red' title='Import DB' onPress={sqlite.importDb} />
+            </View>
+            <View>
+                <Button color='red' title='Purge DB' onPress={purgeDb} />
             </View>
         </View>
     </View>);
 }
 
 const styles = StyleSheet.create({
-
+    content: {
+        flex: 1,
+        margin: 10,
+    },
 });
 
 const mapStateToProps = (state: RootState): { bookCt: number, pageCt: number, readCt: number, sortOrder: string } => {

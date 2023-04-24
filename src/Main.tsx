@@ -1,6 +1,5 @@
 import 'react-native-gesture-handler';
 import React from 'react';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { Provider } from 'react-redux';
 import { StatusBar } from 'expo-status-bar';
 import { enableScreens } from 'react-native-screens';
@@ -22,26 +21,19 @@ export type PageParamList = {
 enableScreens()
 const Stack = createStackNavigator<PageParamList>();
 
-const headerLeft = () => (
-    <Ionicons name='settings' size={32} />
-)
-const headerRight = () => (
-    <Ionicons name='add' size={32} />
-)
-
-export default function Main(): JSX.Element {
-    return (
-        <Provider store={ ReduxStore.getStore() }>
-            <NavigationContainer>
-            <StatusBar style="auto" />
-                <Stack.Navigator>
-                    <Stack.Group screenOptions={{ presentation: 'modal' }}>
-                        <Stack.Screen name="Books" component={BooksPage} options={{ headerLeft, headerRight }} />
-                        <Stack.Screen name="Settings" component={SettingsPage} />
-                        <Stack.Screen name="EntryForm" component={EntryFormPage} />
-                    </Stack.Group>
-                </Stack.Navigator>
-            </NavigationContainer>
-        </Provider>
-    );
+const Main = (): JSX.Element => {
+    return (<Provider store={ ReduxStore.getStore() }>
+        <NavigationContainer>
+        <StatusBar style="auto" />
+            <Stack.Navigator>
+                <Stack.Group screenOptions={{ presentation: 'modal' }}>
+                    <Stack.Screen name="Books" component={BooksPage} />
+                    <Stack.Screen name="Settings" component={SettingsPage} />
+                    <Stack.Screen name="EntryForm" component={EntryFormPage} />
+                </Stack.Group>
+            </Stack.Navigator>
+        </NavigationContainer>
+    </Provider>);
 }
+
+export default Main;
