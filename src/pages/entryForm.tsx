@@ -47,7 +47,6 @@ const EntryForm = ({ navigation, route }: Props) => {
             if (typeof ex == 'string'){
                 setErrorMsg(ex);
             }
-            console.error(ex);
         }
     };
 
